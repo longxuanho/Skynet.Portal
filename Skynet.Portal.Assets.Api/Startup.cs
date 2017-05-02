@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Skynet.Portal.Assets.Data.Entities;
+using Microsoft.EntityFrameworkCore;
+using Skynet.Portal.Assets.Data.Services;
+using Skynet.Portal.Assets.Api.Models;
 
 namespace Skynet.Portal.Assets.Api
 {
@@ -29,6 +29,11 @@ namespace Skynet.Portal.Assets.Api
         {
             // Add framework services.
             services.AddMvc();
+
+            var connectionString = Configuration["connectionStrings:thucLucDBConnectionString"];
+            services.AddDbContext<ThucLucContext>(o => o.UseSqlServer(connectionString));
+
+            services.AddScoped<IThucLucRepository, ThucLucRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +50,12 @@ namespace Skynet.Portal.Assets.Api
             {
                 app.UseExceptionHandler();
             }
+
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<ThietBi, ThietBiDto>();
+                cfg.CreateMap<ThietBi, ThietBiSimpleDto>();
+            });
 
             app.UseMvc();
         }

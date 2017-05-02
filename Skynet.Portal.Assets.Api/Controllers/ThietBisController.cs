@@ -1,11 +1,51 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Skynet.Portal.Assets.Api.Models;
+using Skynet.Portal.Assets.Data.Services;
+using System;
+using System.Collections.Generic;
 
 namespace Skynet.Portal.Assets.Api.Controllers
 {
-    [Route("api/assets")]
+    [Route("api/thietbis")]
     public class ThietBisController : Controller
     {
+        private IThucLucRepository _thucLucRepository;
 
+        public ThietBisController(IThucLucRepository thucLucRepository)
+        {
+            _thucLucRepository = thucLucRepository;
+        }
+
+        [HttpGet]
+        public IActionResult GetThietBis([FromQuery] bool simpleModel = false)
+        {
+            var thietBisFromRepo = _thucLucRepository.GetThietBis();
+
+            if (simpleModel)
+            {
+                var thietbis = Mapper.Map<IEnumerable<ThietBiSimpleDto>>(thietBisFromRepo);
+                return Ok(thietbis);
+            }
+            else
+            {
+                var thietbis = Mapper.Map<IEnumerable<ThietBiDto>>(thietBisFromRepo);
+                return Ok(thietbis);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetThietBi(Guid id)
+        {
+            var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
+            if (thietBiFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var thietbi = Mapper.Map<ThietBiDto>(thietBiFromRepo);
+            return Ok(thietbi);
+        }
 
     }
 }
