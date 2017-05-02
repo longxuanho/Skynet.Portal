@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skynet.Portal.Assets.Api", "Skynet.Portal.Assets.Api\Skynet.Portal.Assets.Api.csproj", "{9202FBF4-F0A0-4C3E-9745-7B0527524DA1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EB0319CE-EA9A-4E78-B36F-1CB341933F37} = {EB0319CE-EA9A-4E78-B36F-1CB341933F37}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skynet.Portal.Assets.Data", "Skynet.Portal.Assets.Data\Skynet.Portal.Assets.Data.csproj", "{EB0319CE-EA9A-4E78-B36F-1CB341933F37}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{9202FBF4-F0A0-4C3E-9745-7B0527524DA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9202FBF4-F0A0-4C3E-9745-7B0527524DA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9202FBF4-F0A0-4C3E-9745-7B0527524DA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB0319CE-EA9A-4E78-B36F-1CB341933F37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB0319CE-EA9A-4E78-B36F-1CB341933F37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB0319CE-EA9A-4E78-B36F-1CB341933F37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB0319CE-EA9A-4E78-B36F-1CB341933F37}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
