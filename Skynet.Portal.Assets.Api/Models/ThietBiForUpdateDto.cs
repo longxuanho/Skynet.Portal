@@ -2,7 +2,6 @@
 {
     public class ThietBiForUpdateDto
     {
-        public string MaThietBi { get; set; }
         public string MaTopX { get; set; }
         public string MaMaximo { get; set; }
 
