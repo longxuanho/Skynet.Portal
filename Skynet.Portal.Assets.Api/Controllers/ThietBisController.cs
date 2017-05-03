@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Skynet.Portal.Assets.Api.Models;
+using Skynet.Portal.Assets.Data.Entities;
 using Skynet.Portal.Assets.Data.Services;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace Skynet.Portal.Assets.Api.Controllers
             return Ok(thietbis);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetThietBi")]
         public IActionResult GetThietBi(Guid id)
         {
             var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
@@ -37,6 +38,47 @@ namespace Skynet.Portal.Assets.Api.Controllers
 
             var thietbi = Mapper.Map<ThietBiDto>(thietBiFromRepo);
             return Ok(thietbi);
+        }
+
+        [HttpPost]
+        public IActionResult CreateThietBi([FromBody] ThietBiForCreationDto thietbi)
+        {
+            if (thietbi == null)
+            {
+                return BadRequest();
+            }
+
+            var thietBiEntity = Mapper.Map<ThietBi>(thietbi);
+
+            _thucLucRepository.AddThietBi(thietBiEntity);
+
+            if (!_thucLucRepository.Save())
+            {
+                throw new Exception("Có lỗi khi thêm thiết bị mới.");
+            }
+
+            var thietBiToReturn = Mapper.Map<ThietBiDto>(thietBiEntity);
+
+            return CreatedAtRoute("GetThietBi", new { id = thietBiToReturn.Id }, thietBiToReturn);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteThietBi(Guid id)
+        {
+            var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
+            if (thietBiFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _thucLucRepository.DeleteThietBi(thietBiFromRepo);
+
+            if (!_thucLucRepository.Save())
+            {
+                throw new Exception($"Có lỗi khi xóa bỏ thiết bị với mã Guid {id}");
+            }
+
+            return NoContent();
         }
 
     }

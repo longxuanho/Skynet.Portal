@@ -62,6 +62,7 @@ namespace Skynet.Portal.Assets.Api
             AutoMapper.Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<ThietBi, ThietBiDto>();
+                cfg.CreateMap<ThietBiForCreationDto, ThietBi>();
             });
 
             app.UseMvc();
