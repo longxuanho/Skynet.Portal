@@ -7,6 +7,7 @@ using Skynet.Portal.Assets.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Skynet.Portal.Assets.Data.Services;
 using Skynet.Portal.Assets.Api.Models;
+using Microsoft.AspNetCore.Http;
 
 namespace Skynet.Portal.Assets.Api
 {
@@ -48,13 +49,19 @@ namespace Skynet.Portal.Assets.Api
             }
             else
             {
-                app.UseExceptionHandler();
+                app.UseExceptionHandler(appBuilder =>
+                {
+                    appBuilder.Run(async context =>
+                    {
+                        context.Response.StatusCode = 500;
+                        await context.Response.WriteAsync("Có lỗi xảy ra từ phía server. Vui lòng thử lại sau.");
+                    });
+                });
             }
 
             AutoMapper.Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<ThietBi, ThietBiDto>();
-                cfg.CreateMap<ThietBi, ThietBiSimpleDto>();
             });
 
             app.UseMvc();

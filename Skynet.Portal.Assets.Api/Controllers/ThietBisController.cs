@@ -18,20 +18,12 @@ namespace Skynet.Portal.Assets.Api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetThietBis([FromQuery] bool simpleModel = false)
+        public IActionResult GetThietBis()
         {
             var thietBisFromRepo = _thucLucRepository.GetThietBis();
-
-            if (simpleModel)
-            {
-                var thietbis = Mapper.Map<IEnumerable<ThietBiSimpleDto>>(thietBisFromRepo);
-                return Ok(thietbis);
-            }
-            else
-            {
-                var thietbis = Mapper.Map<IEnumerable<ThietBiDto>>(thietBisFromRepo);
-                return Ok(thietbis);
-            }
+           
+            var thietbis = Mapper.Map<IEnumerable<ThietBiDto>>(thietBisFromRepo);
+            return Ok(thietbis);
         }
 
         [HttpGet("{id}")]
