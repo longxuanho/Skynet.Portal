@@ -63,6 +63,7 @@ namespace Skynet.Portal.Assets.Api
             {
                 cfg.CreateMap<ThietBi, ThietBiDto>();
                 cfg.CreateMap<ThietBiForCreationDto, ThietBi>();
+                cfg.CreateMap<ThietBiForUpdateDto, ThietBi>();
             });
 
             app.UseMvc();

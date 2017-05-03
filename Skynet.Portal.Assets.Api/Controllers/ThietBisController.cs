@@ -75,7 +75,33 @@ namespace Skynet.Portal.Assets.Api.Controllers
 
             if (!_thucLucRepository.Save())
             {
-                throw new Exception($"Có lỗi khi xóa bỏ thiết bị với mã Guid {id}");
+                throw new Exception($"Có lỗi xảy ra khi xóa bỏ thiết bị với mã Guid {id}.");
+            }
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateThietBi(Guid id, [FromBody] ThietBiForUpdateDto thietbi)
+        {
+            if (thietbi == null)
+            {
+                return BadRequest();
+            }
+
+            var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
+            if (thietBiFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            Mapper.Map(thietbi, thietBiFromRepo);
+
+            _thucLucRepository.UpdateThietBi(thietBiFromRepo);
+
+            if (!_thucLucRepository.Save())
+            {
+                throw new Exception($"Có lỗi xảy ra khi cập nhật thiết bị với mã Gui {id}.");
             }
 
             return NoContent();
