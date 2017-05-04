@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Skynet.Portal.Assets.Api.Helpers;
 using Skynet.Portal.Assets.Api.Models;
 using Skynet.Portal.Assets.Data.Entities;
 using Skynet.Portal.Assets.Data.Services;
@@ -12,10 +14,12 @@ namespace Skynet.Portal.Assets.Api.Controllers
     public class ThietBisController : Controller
     {
         private IThucLucRepository _thucLucRepository;
+        private ILogger<ThietBisController> _logger;
 
-        public ThietBisController(IThucLucRepository thucLucRepository)
+        public ThietBisController(IThucLucRepository thucLucRepository, ILogger<ThietBisController> logger)
         {
             _thucLucRepository = thucLucRepository;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -48,6 +52,11 @@ namespace Skynet.Portal.Assets.Api.Controllers
                 return BadRequest();
             }
 
+            if (!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
+            }
+
             var thietBiEntity = Mapper.Map<ThietBi>(thietbi);
 
             _thucLucRepository.AddThietBi(thietBiEntity);
@@ -56,6 +65,8 @@ namespace Skynet.Portal.Assets.Api.Controllers
             {
                 throw new Exception("Có lỗi khi thêm thiết bị mới.");
             }
+
+            _logger.LogInformation(100, $"Thiết bị mã với Guid {thietBiEntity.Id} ({thietBiEntity.MaThietBi}) đã được thêm vào hệ thống.");
 
             var thietBiToReturn = Mapper.Map<ThietBiDto>(thietBiEntity);
 
@@ -78,6 +89,8 @@ namespace Skynet.Portal.Assets.Api.Controllers
                 throw new Exception($"Có lỗi xảy ra khi xóa bỏ thiết bị với mã Guid {id}.");
             }
 
+            _logger.LogInformation(100, $"Thiết bị mã với Guid {id} ({thietBiFromRepo.MaThietBi}) đã được gỡ bỏ khỏi hệ thống.");
+
             return NoContent();
         }
 
@@ -87,6 +100,11 @@ namespace Skynet.Portal.Assets.Api.Controllers
             if (thietbi == null)
             {
                 return BadRequest();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return new UnprocessableEntityObjectResult(ModelState);
             }
 
             var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
@@ -103,6 +121,8 @@ namespace Skynet.Portal.Assets.Api.Controllers
             {
                 throw new Exception($"Có lỗi xảy ra khi cập nhật thiết bị với mã Gui {id}.");
             }
+
+            _logger.LogInformation(100, $"Thiết bị mã với Guid {thietBiFromRepo.Id} ({thietBiFromRepo.MaThietBi}) đã được cập nhật nội dung.");
 
             return NoContent();
         }
