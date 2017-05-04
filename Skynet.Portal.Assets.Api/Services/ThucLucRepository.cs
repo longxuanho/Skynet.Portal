@@ -35,7 +35,50 @@ namespace Skynet.Portal.Assets.Api.Services
         public PagedList<ThietBi> GetThietBis(ThietBisResourceParameters thietBisResourceParameters)
         {
             var collectionBeforePaging = _context.ThietBis
-                .OrderBy(a => a.MaThietBi);
+                .OrderBy(a => a.MaThietBi)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.Nhom))
+            {
+                var nhomForWhereClause = thietBisResourceParameters.Nhom.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.Nhom.ToLowerInvariant() == nhomForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.ChungLoai))
+            {
+                var chungLoaiForWhereClause = thietBisResourceParameters.ChungLoai.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.ChungLoai.ToLowerInvariant() == chungLoaiForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.Loai))
+            {
+                var loaiForWhereClause = thietBisResourceParameters.Loai.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.Loai.ToLowerInvariant() == loaiForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.HangSanXuat))
+            {
+                var hangSanXuatForWhereClause = thietBisResourceParameters.HangSanXuat.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.HangSanXuat.ToLowerInvariant() == hangSanXuatForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.KhuVuc))
+            {
+                var khuVucForWhereClause = thietBisResourceParameters.KhuVuc.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.KhuVuc.ToLowerInvariant() == khuVucForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.DvQuanLy))
+            {
+                var dvQuanLyForWhereClause = thietBisResourceParameters.DvQuanLy.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.DvQuanLy.ToLowerInvariant() == dvQuanLyForWhereClause);
+            }
+
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.DvSoHuu))
+            {
+                var dvSoHuuForWhereClause = thietBisResourceParameters.DvSoHuu.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging.Where(a => a.DvSoHuu.ToLowerInvariant() == dvSoHuuForWhereClause);
+            }
 
             return PagedList<ThietBi>.Create(collectionBeforePaging, thietBisResourceParameters.PageNumber, thietBisResourceParameters.PageSize);
         }

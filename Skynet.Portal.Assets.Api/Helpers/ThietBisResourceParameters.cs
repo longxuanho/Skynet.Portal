@@ -18,5 +18,13 @@
                 _pageSize = (value > maxPageSize) ? maxPageSize : value;
             }
         }
+
+        public string Nhom { get; set; }
+        public string ChungLoai { get; set; }
+        public string Loai { get; set; }
+        public string HangSanXuat { get; set; }
+        public string KhuVuc { get; set; }
+        public string DvQuanLy { get; set; }
+        public string DvSoHuu { get; set; }
     }
 }

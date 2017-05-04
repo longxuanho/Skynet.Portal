@@ -48,7 +48,7 @@ namespace Skynet.Portal.Assets.Api.Controllers
                 nextPageLink = nextPageLink
             };
 
-            Response.Headers.Add("x_Pagination", JsonConvert.SerializeObject(paginationMetadata));
+            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
             var thietbis = Mapper.Map<IEnumerable<ThietBiDto>>(thietBisFromRepo);
             return Ok(thietbis);
@@ -62,6 +62,13 @@ namespace Skynet.Portal.Assets.Api.Controllers
                     return _urlHelper.Link("GetThietBis",
                         new
                         {
+                            nhom = thietBisResourceParameters.Nhom,
+                            chungLoai = thietBisResourceParameters.ChungLoai,
+                            loai = thietBisResourceParameters.Loai,
+                            hangSanXuat = thietBisResourceParameters.HangSanXuat,
+                            khuVuc = thietBisResourceParameters.KhuVuc,
+                            dvQuanLy = thietBisResourceParameters.DvQuanLy,
+                            dvSoHuu = thietBisResourceParameters.DvSoHuu,
                             pageNumber = thietBisResourceParameters.PageNumber - 1,
                             pageSize = thietBisResourceParameters.PageSize
                         });
