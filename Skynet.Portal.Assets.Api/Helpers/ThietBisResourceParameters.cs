@@ -26,5 +26,6 @@
         public string KhuVuc { get; set; }
         public string DvQuanLy { get; set; }
         public string DvSoHuu { get; set; }
+        public string Search { get; set; }
     }
 }

@@ -80,6 +80,13 @@ namespace Skynet.Portal.Assets.Api.Services
                 collectionBeforePaging = collectionBeforePaging.Where(a => a.DvSoHuu.ToLowerInvariant() == dvSoHuuForWhereClause);
             }
 
+            if (!string.IsNullOrEmpty(thietBisResourceParameters.Search))
+            {
+                var searchForWhereClause = thietBisResourceParameters.Search.Trim().ToLowerInvariant();
+                collectionBeforePaging = collectionBeforePaging
+                    .Where(a => a.MaThietBi.ToLowerInvariant().Contains(searchForWhereClause));
+            }
+
             return PagedList<ThietBi>.Create(collectionBeforePaging, thietBisResourceParameters.PageNumber, thietBisResourceParameters.PageSize);
         }
 

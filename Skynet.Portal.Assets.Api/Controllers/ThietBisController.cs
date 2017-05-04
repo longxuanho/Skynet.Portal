@@ -62,29 +62,53 @@ namespace Skynet.Portal.Assets.Api.Controllers
                     return _urlHelper.Link("GetThietBis",
                         new
                         {
+                            pageNumber = thietBisResourceParameters.PageNumber - 1,
+                            pageSize = thietBisResourceParameters.PageSize,
+
+                            search = thietBisResourceParameters.Search,
+
                             nhom = thietBisResourceParameters.Nhom,
                             chungLoai = thietBisResourceParameters.ChungLoai,
                             loai = thietBisResourceParameters.Loai,
                             hangSanXuat = thietBisResourceParameters.HangSanXuat,
                             khuVuc = thietBisResourceParameters.KhuVuc,
                             dvQuanLy = thietBisResourceParameters.DvQuanLy,
-                            dvSoHuu = thietBisResourceParameters.DvSoHuu,
-                            pageNumber = thietBisResourceParameters.PageNumber - 1,
-                            pageSize = thietBisResourceParameters.PageSize
+                            dvSoHuu = thietBisResourceParameters.DvSoHuu
+                            
                         });
                 case ResourceUriType.NextPage:
                     return _urlHelper.Link("GetThietBis",
                         new
                         {
                             pageNumber = thietBisResourceParameters.PageNumber + 1,
-                            pageSize = thietBisResourceParameters.PageSize
+                            pageSize = thietBisResourceParameters.PageSize,
+
+                            search = thietBisResourceParameters.Search,
+
+                            nhom = thietBisResourceParameters.Nhom,
+                            chungLoai = thietBisResourceParameters.ChungLoai,
+                            loai = thietBisResourceParameters.Loai,
+                            hangSanXuat = thietBisResourceParameters.HangSanXuat,
+                            khuVuc = thietBisResourceParameters.KhuVuc,
+                            dvQuanLy = thietBisResourceParameters.DvQuanLy,
+                            dvSoHuu = thietBisResourceParameters.DvSoHuu
                         });
                 default:
                     return _urlHelper.Link("GetThietBis",
                         new
                         {
                             pageNumber = thietBisResourceParameters.PageNumber,
-                            pageSize = thietBisResourceParameters.PageSize
+                            pageSize = thietBisResourceParameters.PageSize,
+
+                            search = thietBisResourceParameters.Search,
+
+                            nhom = thietBisResourceParameters.Nhom,
+                            chungLoai = thietBisResourceParameters.ChungLoai,
+                            loai = thietBisResourceParameters.Loai,
+                            hangSanXuat = thietBisResourceParameters.HangSanXuat,
+                            khuVuc = thietBisResourceParameters.KhuVuc,
+                            dvQuanLy = thietBisResourceParameters.DvQuanLy,
+                            dvSoHuu = thietBisResourceParameters.DvSoHuu
                         });
             }
         }
