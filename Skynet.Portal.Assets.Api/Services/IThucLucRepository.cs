@@ -1,12 +1,13 @@
-﻿using Skynet.Portal.Assets.Data.Entities;
+﻿using Skynet.Portal.Assets.Api.Helpers;
+using Skynet.Portal.Assets.Data.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace Skynet.Portal.Assets.Data.Services
+namespace Skynet.Portal.Assets.Api.Services
 {
     public interface IThucLucRepository
     {
-        IEnumerable<ThietBi> GetThietBis();
+        PagedList<ThietBi> GetThietBis(ThietBisResourceParameters thietBisResourceParameters);
         ThietBi GetThietBi(Guid thietBiId);
         void AddThietBi(ThietBi thietBi);
         void DeleteThietBi(ThietBi thietBi);

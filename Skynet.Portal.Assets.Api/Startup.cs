@@ -5,10 +5,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Skynet.Portal.Assets.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Skynet.Portal.Assets.Data.Services;
+using Skynet.Portal.Assets.Api.Services;
 using Skynet.Portal.Assets.Api.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Skynet.Portal.Assets.Api
 {
@@ -36,6 +39,14 @@ namespace Skynet.Portal.Assets.Api
             services.AddDbContext<ThucLucContext>(o => o.UseSqlServer(connectionString));
 
             services.AddScoped<IThucLucRepository, ThucLucRepository>();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory =>
+            {
+                var actionContext = implementationFactory.GetService<IActionContextAccessor>().ActionContext;
+                return new UrlHelper(actionContext);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

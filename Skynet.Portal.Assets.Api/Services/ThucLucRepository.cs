@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Skynet.Portal.Assets.Data.Entities;
+using Skynet.Portal.Assets.Api.Helpers;
 
-namespace Skynet.Portal.Assets.Data.Services
+namespace Skynet.Portal.Assets.Api.Services
 {
     public class ThucLucRepository : IThucLucRepository
     {
@@ -31,9 +32,12 @@ namespace Skynet.Portal.Assets.Data.Services
             return _context.ThietBis.FirstOrDefault(a => a.Id == thietBiId);
         }
 
-        public IEnumerable<ThietBi> GetThietBis()
+        public PagedList<ThietBi> GetThietBis(ThietBisResourceParameters thietBisResourceParameters)
         {
-            return _context.ThietBis.OrderBy(a => a.MaThietBi);
+            var collectionBeforePaging = _context.ThietBis
+                .OrderBy(a => a.MaThietBi);
+
+            return PagedList<ThietBi>.Create(collectionBeforePaging, thietBisResourceParameters.PageNumber, thietBisResourceParameters.PageSize);
         }
 
         public bool Save()

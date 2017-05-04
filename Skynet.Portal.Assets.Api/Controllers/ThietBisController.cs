@@ -4,9 +4,10 @@ using Microsoft.Extensions.Logging;
 using Skynet.Portal.Assets.Api.Helpers;
 using Skynet.Portal.Assets.Api.Models;
 using Skynet.Portal.Assets.Data.Entities;
-using Skynet.Portal.Assets.Data.Services;
+using Skynet.Portal.Assets.Api.Services;
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Skynet.Portal.Assets.Api.Controllers
 {
@@ -15,20 +16,70 @@ namespace Skynet.Portal.Assets.Api.Controllers
     {
         private IThucLucRepository _thucLucRepository;
         private ILogger<ThietBisController> _logger;
+        private IUrlHelper _urlHelper;
 
-        public ThietBisController(IThucLucRepository thucLucRepository, ILogger<ThietBisController> logger)
+        public ThietBisController(IThucLucRepository thucLucRepository, ILogger<ThietBisController> logger, IUrlHelper urlHelper)
         {
             _thucLucRepository = thucLucRepository;
             _logger = logger;
+            _urlHelper = urlHelper;
         }
 
-        [HttpGet]
-        public IActionResult GetThietBis()
+        [HttpGet(Name = "GetThietBis")]
+        public IActionResult GetThietBis(ThietBisResourceParameters thietBisResourceParameters)
         {
-            var thietBisFromRepo = _thucLucRepository.GetThietBis();
-           
+            var thietBisFromRepo = _thucLucRepository.GetThietBis(thietBisResourceParameters);
+
+            var previousPageLink = thietBisFromRepo.HasPrevious
+                ? CreateThietBisResourceUri(thietBisResourceParameters, ResourceUriType.PreviousPage)
+                : null;
+
+            var nextPageLink = thietBisFromRepo.HasNext
+                ? CreateThietBisResourceUri(thietBisResourceParameters, ResourceUriType.NextPage)
+                : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = thietBisFromRepo.TotalCount,
+                pageSize = thietBisFromRepo.PageSize,
+                currentPage = thietBisFromRepo.CurrentPage,
+                totalPages = thietBisFromRepo.TotalPages,
+                previousPageLink = previousPageLink,
+                nextPageLink = nextPageLink
+            };
+
+            Response.Headers.Add("x_Pagination", JsonConvert.SerializeObject(paginationMetadata));
+
             var thietbis = Mapper.Map<IEnumerable<ThietBiDto>>(thietBisFromRepo);
             return Ok(thietbis);
+        }
+
+        private string CreateThietBisResourceUri(ThietBisResourceParameters thietBisResourceParameters, ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return _urlHelper.Link("GetThietBis",
+                        new
+                        {
+                            pageNumber = thietBisResourceParameters.PageNumber - 1,
+                            pageSize = thietBisResourceParameters.PageSize
+                        });
+                case ResourceUriType.NextPage:
+                    return _urlHelper.Link("GetThietBis",
+                        new
+                        {
+                            pageNumber = thietBisResourceParameters.PageNumber + 1,
+                            pageSize = thietBisResourceParameters.PageSize
+                        });
+                default:
+                    return _urlHelper.Link("GetThietBis",
+                        new
+                        {
+                            pageNumber = thietBisResourceParameters.PageNumber,
+                            pageSize = thietBisResourceParameters.PageSize
+                        });
+            }
         }
 
         [HttpGet("{id}", Name = "GetThietBi")]
