@@ -8,6 +8,7 @@ using Skynet.Portal.Assets.Api.Services;
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Skynet.Portal.Assets.Api.Controllers
 {
@@ -25,6 +26,8 @@ namespace Skynet.Portal.Assets.Api.Controllers
             _urlHelper = urlHelper;
         }
 
+        [Authorize("read:thietbis")]
+        [Authorize("manage:thietbis")]
         [HttpGet(Name = "GetThietBis")]
         public IActionResult GetThietBis(ThietBisResourceParameters thietBisResourceParameters)
         {
@@ -54,6 +57,7 @@ namespace Skynet.Portal.Assets.Api.Controllers
             return Ok(thietbis);
         }
 
+        
         private string CreateThietBisResourceUri(ThietBisResourceParameters thietBisResourceParameters, ResourceUriType type)
         {
             switch (type)
@@ -113,6 +117,7 @@ namespace Skynet.Portal.Assets.Api.Controllers
             }
         }
 
+        [Authorize("read:thietbis")]
         [HttpGet("{id}", Name = "GetThietBi")]
         public IActionResult GetThietBi(Guid id)
         {
@@ -126,6 +131,8 @@ namespace Skynet.Portal.Assets.Api.Controllers
             return Ok(thietbi);
         }
 
+        [Authorize("read:thietbis")]
+        [Authorize("manage:thietbis")]
         [HttpPost]
         public IActionResult CreateThietBi([FromBody] ThietBiForCreationDto thietbi)
         {
@@ -155,27 +162,8 @@ namespace Skynet.Portal.Assets.Api.Controllers
             return CreatedAtRoute("GetThietBi", new { id = thietBiToReturn.Id }, thietBiToReturn);
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult DeleteThietBi(Guid id)
-        {
-            var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
-            if (thietBiFromRepo == null)
-            {
-                return NotFound();
-            }
-
-            _thucLucRepository.DeleteThietBi(thietBiFromRepo);
-
-            if (!_thucLucRepository.Save())
-            {
-                throw new Exception($"Có lỗi xảy ra khi xóa bỏ thiết bị với mã Guid {id}.");
-            }
-
-            _logger.LogInformation(100, $"Thiết bị mã với Guid {id} ({thietBiFromRepo.MaThietBi}) đã được gỡ bỏ khỏi hệ thống.");
-
-            return NoContent();
-        }
-
+        [Authorize("read:thietbis")]
+        [Authorize("manage:thietbis")]
         [HttpPut("{id}")]
         public IActionResult UpdateThietBi(Guid id, [FromBody] ThietBiForUpdateDto thietbi)
         {
@@ -205,6 +193,29 @@ namespace Skynet.Portal.Assets.Api.Controllers
             }
 
             _logger.LogInformation(100, $"Thiết bị mã với Guid {thietBiFromRepo.Id} ({thietBiFromRepo.MaThietBi}) đã được cập nhật nội dung.");
+
+            return NoContent();
+        }
+
+        [Authorize("read:thietbis")]
+        [Authorize("manage:thietbis")]
+        [HttpDelete("{id}")]
+        public IActionResult DeleteThietBi(Guid id)
+        {
+            var thietBiFromRepo = _thucLucRepository.GetThietBi(id);
+            if (thietBiFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            _thucLucRepository.DeleteThietBi(thietBiFromRepo);
+
+            if (!_thucLucRepository.Save())
+            {
+                throw new Exception($"Có lỗi xảy ra khi xóa bỏ thiết bị với mã Guid {id}.");
+            }
+
+            _logger.LogInformation(100, $"Thiết bị mã với Guid {id} ({thietBiFromRepo.MaThietBi}) đã được gỡ bỏ khỏi hệ thống.");
 
             return NoContent();
         }

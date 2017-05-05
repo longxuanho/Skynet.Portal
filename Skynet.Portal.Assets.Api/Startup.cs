@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Skynet.Portal.Assets.Api.Helpers;
 
 namespace Skynet.Portal.Assets.Api
 {
@@ -35,6 +36,15 @@ namespace Skynet.Portal.Assets.Api
             // Add framework services.
             services.AddMvc();
 
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read:thietbis",
+                    policy => policy.Requirements.Add(new HasScopeRequirement("read:thietbis", domain)));
+                options.AddPolicy("manage:thietbis",
+                    policy => policy.Requirements.Add(new HasScopeRequirement("manage:thietbis", domain)));
+            });
+
             var connectionString = Configuration["connectionStrings:thucLucDBConnectionString"];
             services.AddDbContext<ThucLucContext>(o => o.UseSqlServer(connectionString));
 
@@ -54,6 +64,13 @@ namespace Skynet.Portal.Assets.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug(LogLevel.Information);
+
+            var authOptions = new JwtBearerOptions
+            {
+                Audience = Configuration["Auth0:Audience"],
+                Authority = $"https://{Configuration["Auth0:Domain"]}/"
+            };
+            app.UseJwtBearerAuthentication(authOptions);
 
             if (env.IsDevelopment())
             {
